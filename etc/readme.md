@@ -9,4 +9,14 @@ Then take the /web folder and upload the contents to your webserver.
 
 To check it, go to https://yoursite.com/cf
 
-If it says something about "Nothing To Update" then you did it correctly
+If it says something about "Nothing To Update" then you did it correctly.
+
+Next, go to your webserver, go to /cf/index.php
+
+You will need to configure a lot of values to the proper things.
+
+After that, go to your database and run the following SQL commands:
+
+```CREATE TABLE subdomaincache (ip LONGTEXT);```
+```CREATE TABLE subdomains (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```
+```CREATE TABLE subdomainapi (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```
