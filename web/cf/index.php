@@ -183,6 +183,6 @@ if (isset($verify)) { //checks to make sure API is set to true
   }
 
     //boop
-	mysqli_close($conn);
+    mysqli_close($conn);
 }
 ?>
