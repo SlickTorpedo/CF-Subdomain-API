@@ -5,6 +5,13 @@ https://github.com/SkriptLang/Skript/releases
 
 Disky:
 https://github.com/DiSkyOrg/DiSky/releases
+
+Skript DB:
+https://www.spigotmc.org/resources/skript-db-updated.89363/
+
+Skent:
+https://forums.skunity.com/resources/skent.817/
+
 #
 Then put the "bot.sk" file inside /plugins/Skript/scripts file. 
 Open it and configure the options at the top.
