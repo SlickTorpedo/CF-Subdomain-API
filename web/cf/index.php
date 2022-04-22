@@ -119,60 +119,70 @@ if (isset($verify)) { //checks to make sure API is set to true
 
             //Send the "A" record to cloudflare API
             $json = json_encode($data);
-curl_setopt($ch, CURLOPT_URL, "https://api.cloudflare.com/client/v4/zones/".$cloudflare_zone."/dns_records");
-curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_exec($ch);
-curl_close($ch);
+            curl_setopt($ch, CURLOPT_URL, "https://api.cloudflare.com/client/v4/zones/".$cloudflare_zone."/dns_records");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_exec($ch); //Send it to cloudflare
+            curl_close($ch); //Close the curl request
 
-echo "<br>";
+            echo "<br>"; //Not sure why this is here. It was here when I made it the first time so I'm leaving it.
 
-//Prepare the second API call for the SRV record
-$ch = curl_init();
-$headers = array(
-    'X-Auth-Email: '.$cloudflare_email.'',
-    'Authorization: Bearer '.$cloudflare_api_token.'',
-    'Content-Type: application/json',
-);
+            //Prepare the second API call for the SRV record
+            $ch = curl_init();
+            $headers = array(
+                'X-Auth-Email: '.$cloudflare_email.'',
+                'Authorization: Bearer '.$cloudflare_api_token.'',
+                'Content-Type: application/json',
+            );
 
 
-$password = $auth_password; //Check the password just incase :)
+            $password = $auth_password; //Check the password just incase :)
 
-//Create the array with Cloudflare Data
-if($_GET['password'] == $password) {
-    $data = array(
-	    'type' => 'SRV',
-	    'data' => array(
-	    "name"=>"".$name."",
-	    "ttl"=>0,
-	    "service"=>"_minecraft",
-	    "proto"=>"_tcp",
-	    "weight"=>0,
-	    "port"=>"".$port."",
-	    "priority"=>0,
-	    "target"=>"".$name.".".$cloudflare_domain."",
-	));
-} else {
-  die("Something's missing...");
-}
+            //Create the array with Cloudflare Data
+            if($_GET['password'] == $password) {
+                $data = array(
+	                'type' => 'SRV',
+	                'data' => array(
+	                "name"=>"".$name."",
+	                "ttl"=>0,
+	                "service"=>"_minecraft",
+	                "proto"=>"_tcp",
+	                "weight"=>0,
+	                "port"=>"".$port."",
+	                "priority"=>0,
+	                "target"=>"".$name.".".$cloudflare_domain."",
+	            ));
+            } else {
+                die("Something's missing..."); //Wrong password
+            }
 
-//Ship it off to cloudflare
-$json = json_encode($data);
-curl_setopt($ch, CURLOPT_URL, "https://api.cloudflare.com/client/v4/zones/".$cloudflare_zone."/dns_records");
-curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_exec($ch);
-curl_close($ch);
+            //Ship it off to cloudflare (This is the SRV record)
+            $json = json_encode($data);
+            curl_setopt($ch, CURLOPT_URL, "https://api.cloudflare.com/client/v4/zones/".$cloudflare_zone."/dns_records");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_exec($ch); //Send it to cloudflare
+            curl_close($ch); //Close the curl
+    
     }
+
+    //Move it form Cache -> Official Subdomain Log
+    //So the bot knows the subdomain is already in use!
     $sql = "INSERT INTO subdomains (ip,name,port,discorduserid) VALUES ('$ip','$name','$port','$discid');";
 	$result = mysqli_query($conn, $sql);
+
+    //Delete the old subdomain from cache so it dosen't keep refreshing itself
     $sql = "DELETE FROM subdomainapi WHERE name = '$name'";
 	$result = mysqli_query($conn, $sql);
+
+    //let bot know it worked succesfuly
     echo "<br><br>Transferred to more stable table";
   } else {
+    //Nothing in the cache database
     echo "Nothing to update!";
   }
 
+    //boop
 	mysqli_close($conn);
 }
 ?>
