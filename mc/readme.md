@@ -22,8 +22,8 @@ From then on, if something breaks, you may fix it by typing "-r" in any channel!
 #
 As long as the server is online, the bot is online!
 #
-The commands for the bot are as follows:
--r (Reload Bot)
-.sda (Add Subdomain)
-.subdomains @user (View persons subdomains)
-.subdomain (When private messaged to the bot it sends their subdomains)
+The commands for the bot are as follows:<br>
+-r (Reload Bot)<br>
+.sda (Add Subdomain)<br>
+.subdomains @user (View persons subdomains)<br>
+.subdomain (When private messaged to the bot it sends their subdomains)<br>
