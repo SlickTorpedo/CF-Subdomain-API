@@ -1,0 +1,254 @@
+#CONFIGURE THESE AS YOU SEE FIT
+
+Options:
+	dbhost: localhost
+	#Database IP
+	
+	dbname: NexusSociety
+	#Database Name
+	
+	dbusername: root
+	#Database Username
+	
+	dbpassword: password
+	#Database Password
+	
+	bottoken: yourBotToken
+	#Discord Bot Token
+	
+	botpresence: DISABLED
+	#You can set this to PLAYING, STREAMING, LISTENING, WATCHING
+	
+	botstatus: DISABLED
+	#You can set this to something or "DISABLED" if you want it off all together!
+	
+	adminroleid: 000000000000000000
+	#This is the discord role ID for the admin role! (They can make subdomains)
+	
+	discordguildid: 000000000000000000
+	#Your discord server's ID
+	
+	domain: nexussociety.net
+	#Your website domain
+	#DO NOT put panel.yoursite.net here put yoursite.net
+	#It's just your base domain
+	
+	companyName: Nexus Hosting
+	#Your company name (Shown on embed footers)
+	
+	discordlink: https://discord.gg/XXXXXX
+	#Discord Link
+	
+	apipath: https://nexussociety.net/api/cf
+	#This is the API you created earlier!
+	
+	password: Password
+	#This is the password you configured on the API earlier!
+	#By default it's Password
+
+
+#-------------------------------
+
+
+#DO NOT TOUCH ANYHING BELOW HERE!
+
+
+#-------------------------------
+
+on script load:
+	set {-sql} to the database "mysql://{@dbhost}:3306/{@dbname}?user={@dbusername}&password={@dbpassword}&useSSL=false"
+	send "&aAttempted to login to SQL Databse!" to console
+
+define new bot named "Bot":
+    token: "{@bottoken}"
+    intents: default intents
+    policy: all
+    auto reconnect: true
+    compression: none
+	
+on load:
+	set online status of bot "Bot" to online
+	if "{@botstatus}" is not "DISABLED":
+		if "{@botpresence}" is "PLAYING":
+			set presence of bot "Bot" to playing "{@botstatus}"
+		if "{@botpresence}" is "STREAMING":
+			set presence of bot "Bot" to streaming "{@botstatus}"
+		if "{@botpresence}" is "LISTENING":
+			set presence of bot "Bot" to listening "{@botstatus}"
+		if "{@botpresence}" is "WATCHING":
+			set presence of bot "Bot" to watching "{@botstatus}"
+		else:
+			set presence of bot "Bot" to watching "your incorrect config file"
+	
+discord command -r:
+	trigger:
+		if event-member has discord role with id "{@adminroleid}":
+			execute console command "/sk reload bot"
+			reply with "Reloaded and connected to backend!"
+			stop
+		else:
+			make embed:
+				set title of embed to "-- Permission Denied --"
+				set color of embed to red
+				set timestamp of embed to now
+				set footer of embed to "Nexus Hosting"
+			reply with embed
+			stop
+			
+discord command .subdomains [<user>]:
+	trigger:
+		if guild with id "{@discordguildid}" is event-guild:
+			if event-member has discord role with id "{@adminroleid}":
+				if arg-1 is set:
+					set {_namep} to "%arg-1%"
+					set {_name::*} to {_namep} split at "##"
+					reply with "Alright I'll check %{_name::1}%'s subdomains for you!"
+					execute "SELECT * FROM subdomains WHERE discorduserid = %discord id of arg-1%" in {-sql} and store the result in {_output::*}
+					if {_output::name::*} is set:
+						set {_s} to size of {_output::name::*}
+						set {_counter} to 1
+						make embed:
+							set title of embed to "User Subdomains"
+							set the embed color of embed to light blue
+							set timestamp of embed to now
+							set footer of embed to "{@companyName}"
+							loop {_s} times:
+								add field named "%{_output::name::%{_counter}%}%.{@domain}" with value "``%{_output::ip::%{_counter}%}%:%{_output::port::%{_counter}%}%``" to embed
+								add 1 to {_counter}
+						reply with "%arg-1% has %{_s}% subdomain(s)!"
+						reply with embed
+						stop
+					else:
+						make embed:
+							set title of embed to "No Subdomains!"
+							set the embed color of embed to red
+							set timestamp of embed to now
+							set footer of embed to "{@companyName}"
+							add field named "You have no subdomains!" with value "We can give you one here!" to embed
+						reply with embed
+						stop
+				else:
+					reply with ".subdomains <user>"
+					reply with "Or you can message me ``.subdomains`` to see yours!"
+					stop
+			else:
+				reply with "For security reasons you will have to message me that command!"
+				stop
+		else:
+			stop
+			
+on message received:
+	if message is from guild:
+		stop
+	else:
+		set {_e} to event-message
+		if {_e} is ".subdomains":
+			reply with "I'm grabbing your subdomains! One moment!"
+			execute "SELECT * FROM subdomains WHERE discorduserid = %discord id of event-user%" in {-sql} and store the result in {_output::*}
+			if {_output::name::*} is set:
+				set {_s} to size of {_output::name::*}
+				set {_counter} to 1
+				make embed:
+					set title of embed to "User Subdomains"
+					set the embed color of embed to light blue
+					set timestamp of embed to now
+					set footer of embed to "{@companyName}"
+					loop {_s} times:
+						add field named "%{_output::name::%{_counter}%}%.{@domain}" with value "``%{_output::ip::%{_counter}%}%:%{_output::port::%{_counter}%}%``" to embed
+						add 1 to {_counter}
+				reply with "You have %{_s}% subdomain(s)!"
+				reply with embed
+				stop
+			else:
+				make embed:
+					set title of embed to "No Subdomains!"
+					set title url of embed to "{@discordlink}"
+					set the embed color of embed to red
+					set timestamp of embed to now
+					set footer of embed to "{@companyName}"
+					add field named "You have no subdomains!" with value "Click the title to get one!" to embed
+				reply with embed
+				stop
+				
+discord command .sda [<member>] [<text>] [<integer>] [<text>]:
+	trigger:
+		if event-member has discord role with id "835751842167259167":
+			if arg-1 is set:
+				if arg-2 is set:
+					if arg-3 is set:
+						make embed:
+							set title of embed to "Authenticating..."
+							set color of embed to yellow
+							set timestamp of embed to now
+							set footer of embed to "{@companyName}"
+						reply with embed
+						execute "SELECT * FROM subdomaincache" in {-sql} and store the result in {_output::*}
+						if {_xjawdjbawdbawdubawub} is not set:
+							if {_output::ip::*} is not set:
+								execute "INSERT INTO subdomaincache (ip) VALUES (%arg-2%)" in {-sql}
+								wait 1 seconds
+								set {ip} to "%arg-2%"
+								wait 0.1 seconds
+								set {port} to "%arg-3%"
+								wait 1 seconds
+								if {_output::ip::*} is not set:
+									execute "SELECT * FROM subdomains WHERE name = %arg-4%" in {-sql} and store the result in {_output::*}
+									if {_output::name::*} is set:
+										make embed:
+											set title of embed to "Error! This subdomain already exists!"
+											set embed color of embed to red
+											set timestamp of embed to now
+											set footer of embed to "{@companyName}"
+										reply with embed
+										stop
+									make embed:
+										set title of embed to "The backend database has been notified. (1/2)"
+										set embed color of embed to yellow
+										set timestamp of embed to now
+										set footer of embed to "{@companyName}"
+									reply with embed
+									execute "INSERT INTO subdomainapi (ip,name,port,discorduserid) VALUES (%{ip}%,%arg-4%,%{port}%,%discord id of arg-1%)" in {-sql} and store the result in {_output::*}
+									reply with "Executed: ``INSERT INTO subdomainapi (ip,name,port,discorduserid) VALUES (%{ip}%,%arg-2%,%{port}%,%discord id of arg-1%)``"
+									wait 1 seconds
+									fetch url "https://{@apipath}?password={@password}":
+										delete {ip}
+										delete {port}
+										make embed:
+											set title of embed to "API Call authenticated and DNS Records Pushed. (2/2)"
+											set embed color of embed to light blue
+											set timestamp of embed to now
+											add field named "**Important**" with value "The DNS records may take a moment to update!%nl%I'll let you know when they do that here!" to embed
+											set footer of embed to "{@companyName}"
+										reply with embed
+										execute "DELETE FROM subdomaincache" in {-sql}
+										wait 5 minutes
+										execute "SELECT * FROM subdomains WHERE name = %arg-4%" in {-sql} and store the result in {_output::*}
+										if {_output::name::*} is not set:
+											reply with "Something went wrong in the mess that our Subdomain API is. Please run the command again!"
+											stop
+										make embed:
+											set title of embed to "DNS Records Pushed!"
+											set embed color of embed to green
+											set timestamp of embed to now
+											add field named "DNS Status:" with value "You should be able to connect to your server now!%nl%``%arg-4%.{@domain}``%nl%If this does not work, please contact an admin!" to embed
+											set footer of embed to "{@companyName}"
+										reply with embed
+										stop
+							else:
+								reply with "There is already a pending subdomain request! Please wait!"
+								stop
+						else:
+							reply with "Something has happened that shouldn't have... Please contact an admin!"
+							stop
+					else:
+						reply with ".sda <@user> <ip> <port> <subdomain>"
+						stop
+				else:
+					reply with ".sda <@user> <ip> <port> <subdomain>"
+					stop
+			else:
+				reply with ".sda <@user> <ip> <port> <subdomain>"
+				stop
+		else:
+			reply with "You must be an admin for this!"
+			stop
