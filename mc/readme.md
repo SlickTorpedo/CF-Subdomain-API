@@ -21,3 +21,9 @@ Then go to console and type ```/sk reload bot```
 From then on, if something breaks, you may fix it by typing "-r" in any channel!
 #
 As long as the server is online, the bot is online!
+#
+The commands for the bot are as follows:
+-r (Reload Bot)
+.sda (Add Subdomain)
+.subdomains @user (View persons subdomains)
+.subdomain (When private messaged to the bot it sends their subdomains)
