@@ -20,3 +20,18 @@ After that, go to your database and run the following SQL commands:
 ```CREATE TABLE subdomaincache (ip LONGTEXT);```<br>
 ```CREATE TABLE subdomains (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```<br>
 ```CREATE TABLE subdomainapi (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```<br>
+
+From there you can now start a Minecraft and visit the /mc folder for a list of plugins you need.
+
+Download and install those plugins, restart your server, and go to the /plugins/Skript/scripts folder and empty that folder.
+
+Now upload the content from /mc folder into /plugins/Skript/scripts and go to console and type ```/sk reload bot```
+
+All set! The bot should be online and it should all be working!
+
+To test it out, type -r in any channel. If it works, the bot is online.
+
+The commands can be found here:
+https://github.com/SlickTorpedo/CF-Subdomain-API/tree/main/mc
+
+Contact me for support!
