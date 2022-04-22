@@ -17,6 +17,6 @@ You will need to configure a lot of values to the proper things.
 
 After that, go to your database and run the following SQL commands:
 
-```CREATE TABLE subdomaincache (ip LONGTEXT);```
-```CREATE TABLE subdomains (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```
-```CREATE TABLE subdomainapi (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```
+```CREATE TABLE subdomaincache (ip LONGTEXT);```<br>
+```CREATE TABLE subdomains (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```<br>
+```CREATE TABLE subdomainapi (ip LONGTEXT, name LONGTEXT, port BIGINT, discorduserid BIGINT);```<br>
