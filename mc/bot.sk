@@ -39,7 +39,7 @@ Options:
 	discordlink: https://discord.gg/XXXXXX
 	#Discord Link
 	
-	apipath: https://nexussociety.net/api/cf
+	apipath: https://nexussociety.net/cf
 	#This is the API you created earlier!
 	
 	password: Password
