@@ -15,3 +15,9 @@ This is made for people to be able to assign subdomains to customers via discord
  #
  
  There **is not** an installer for this yet! You will need to manually configure it! I walk you through it tho in ``/etc`` don't worry!
+
+#
+
+YOU DO NOT NEED TO INSTALL THE PLUGIN ON EVERY SERVER
+
+You only need to install the plugin on one server. It's just for hosting the bot. Do not install this on everyones servers!
