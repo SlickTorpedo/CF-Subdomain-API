@@ -1,6 +1,6 @@
 This is just some extra stuff that you may need as well as the install proccess!
 #
-For support you may go to https://nexussociety.net/support or contact Slick#7454 on discord!
+For support you can go to https://discord.gg/tN7AX9m8mS
 #
 **INSTALLING**<br>
 The first step is to download all the files.
