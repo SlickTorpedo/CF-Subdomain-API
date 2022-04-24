@@ -21,3 +21,5 @@ This is made for people to be able to assign subdomains to customers via discord
 YOU DO NOT NEED TO INSTALL THE PLUGIN ON EVERY SERVER
 
 You only need to install the plugin on one server. It's just for hosting the bot. Do not install this on everyones servers!
+
+For support click here: https://discord.gg/tN7AX9m8mS
